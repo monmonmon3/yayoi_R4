@@ -122,7 +122,7 @@ with open(db_path, "rb") as f:
     db_data = f.read()
 
 st.download_button(
-    label="📁 SQLiteデータベースをダウンロード",
+    label="📁 新規データベースをダウンロード",
     data=db_data,
     file_name="my_database.db",
     mime="application/octet-stream"
