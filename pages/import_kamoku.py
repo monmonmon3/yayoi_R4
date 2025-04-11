@@ -6,70 +6,58 @@ import io
 import os
 from datetime import datetime
 
-# StreamlitのUI設定
+# ページ設定
 st.set_page_config(layout="wide")
 
-# サイドバー
 with st.sidebar:
+    st.markdown('<div class="section red">データベース接続</div>', unsafe_allow_html=True)
     st.page_link("menu.py", label="データベース接続")
+
     st.markdown('<div class="section blue">処理項目</div>', unsafe_allow_html=True)
     st.page_link("pages/henkan.py", label="仕訳変換")
+
     st.markdown('<div class="section green">設定変更</div>', unsafe_allow_html=True)
     st.page_link("pages/setting_kamoku.py", label="科目設定")
     st.page_link("pages/setting_hojo.py", label="補助設定")
     st.page_link("pages/setting_syouhizei.py", label="消費税設定")
-    st.markdown('<div class="section orange">初期設定</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="section orange">データベースへのインポート</div>', unsafe_allow_html=True)
     st.page_link("pages/import_kamoku.py", label="勘定科目マスタインポート")
     st.page_link("pages/import_hojo.py", label="補助科目マスタインポート")
     st.page_link("pages/import_syouhizei.py", label="消費税マスタインポート")
 
-# CSS
 st.markdown("""
-<style>
-.section {
-    font-size: 16px;
-    font-weight: bold;
-    padding: 8px 12px;
-    margin: 15px 0 8px 0;
-    border-radius: 8px;
-    border: 2px solid;
-}
-.blue {
-    color: #1f77b4;
-    border-color: #1f77b4;
-    background-color: #e6f0fa;
-}
-.green {
-    color: #2ca02c;
-    border-color: #2ca02c;
-    background-color: #e9f7ea;
-}
-.orange {
-    color: #ff7f0e;
-    border-color: #ff7f0e;
-    background-color: #fff4e6;
-}
-[data-baseweb="input"] input {
-    background-color: white !important;
-    color: black !important;
-}
-</style>
+    <style>
+    .section {
+        font-size: 16px;
+        font-weight: bold;
+        padding: 8px 12px;
+        margin: 15px 0 8px 0;
+        border-radius: 8px;
+        border: 2px solid;
+    }
+    .blue {
+        color: #1f77b4;
+        border-color: #1f77b4;
+        background-color: #e6f0fa;
+    }
+    .green {
+        color: #2ca02c;
+        border-color: #2ca02c;
+        background-color: #e9f7ea;
+    }
+    .orange {
+        color: #ff7f0e;
+        border-color: #ff7f0e;
+        background-color: #fff4e6;
+    }
+    .red {
+        color: #d62728;
+        border-color: #d62728;
+        background-color: #fdecea;
+    }
+    </style>
 """, unsafe_allow_html=True)
-
-# DB接続関数
-def get_db_connection():
-    if 'conn' not in st.session_state:
-        if st.session_state.db_path:
-            conn = sqlite3.connect(st.session_state.db_path, check_same_thread=False)
-            st.session_state.conn = conn
-        else:
-            conn = None
-    else:
-        conn = st.session_state.conn
-    return conn
-
-# 共通のDB接続
-conn = get_db_connection()
 
 # タイトル
 st.title("勘定科目マスターのインポート")
@@ -96,6 +84,17 @@ st.download_button(
     file_name="kamoku_import_template.xlsx",
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
+
+# DB接続
+def get_db_connection():
+    if "conn" not in st.session_state:
+        if "db_path" not in st.session_state or not st.session_state.db_path:
+            st.error("「データベース接続」でデータベースに接続してください。")
+            st.stop()
+        st.session_state.conn = sqlite3.connect(st.session_state.db_path, check_same_thread=False)
+    return st.session_state.conn
+
+conn = get_db_connection()
 
 # --- 接続DBパスの表示 ---
 if 'db_path' in st.session_state and st.session_state.db_path:

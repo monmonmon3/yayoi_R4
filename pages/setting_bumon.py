@@ -2,27 +2,25 @@ import streamlit as st
 import pandas as pd
 import sqlite3
 
-# StreamlitのUI設定
-st.set_page_config(layout="wide")  # レイアウトをデフォルトに設定
+# ページ設定
+st.set_page_config(layout="wide")
 
 with st.sidebar:
-    st.page_link("menu.py", label="データベース接続")
+    st.markdown('<div class="section red">データベース接続</div>', unsafe_allow_html=True)
+    st.page_link("menu.py", label="&nbsp;&nbsp;データベース接続")
 
-    # 処理項目（青系）
     st.markdown('<div class="section blue">処理項目</div>', unsafe_allow_html=True)
-    st.page_link("pages/henkan.py", label="仕訳変換")
+    st.page_link("pages/henkan.py", label="&nbsp;&nbsp;仕訳変換")
 
-    # 設定変更（緑系）
     st.markdown('<div class="section green">設定変更</div>', unsafe_allow_html=True)
-    st.page_link("pages/setting_kamoku.py", label="科目設定")
-    st.page_link("pages/setting_hojo.py", label="補助設定")
-    st.page_link("pages/setting_syouhizei.py", label="消費税設定")
+    st.page_link("pages/setting_kamoku.py", label="&nbsp;&nbsp;勘定科目設定")
+    st.page_link("pages/setting_hojo.py", label="&nbsp;&nbsp;補助科目設定")
+    st.page_link("pages/setting_syouhizei.py", label="&nbsp;&nbsp;消費税設定")
 
-    # 初期設定（オレンジ系）
-    st.markdown('<div class="section orange">初期設定</div>', unsafe_allow_html=True)
-    st.page_link("pages/import_kamoku.py", label="勘定科目マスタインポート")
-    st.page_link("pages/import_hojo.py", label="補助科目マスタインポート")
-    st.page_link("pages/import_syouhizei.py", label="消費税マスタインポート")
+    st.markdown('<div class="section orange">データベースへのインポート</div>', unsafe_allow_html=True)
+    st.page_link("pages/import_kamoku.py", label="&nbsp;&nbsp;勘定科目マスタインポート")
+    st.page_link("pages/import_hojo.py", label="&nbsp;&nbsp;補助科目マスタインポート")
+    st.page_link("pages/import_syouhizei.py", label="&nbsp;&nbsp;消費税マスタインポート")
 
 st.markdown("""
     <style>
@@ -48,6 +46,11 @@ st.markdown("""
         color: #ff7f0e;
         border-color: #ff7f0e;
         background-color: #fff4e6;
+    }
+    .red {
+        color: #d62728;
+        border-color: #d62728;
+        background-color: #fdecea;
     }
     </style>
 """, unsafe_allow_html=True)

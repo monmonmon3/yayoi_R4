@@ -13,19 +13,23 @@ image1 = Image.open("image1.png")
 image2 = Image.open("image2.png")
 image3 = Image.open("image3.png")
 
-# サイドバー
 with st.sidebar:
-    st.page_link("menu.py", label="データベース接続")
+    st.markdown('<div class="section red">データベース接続</div>', unsafe_allow_html=True)
+    st.page_link("menu.py", label="&nbsp;&nbsp;データベース接続")
+
     st.markdown('<div class="section blue">処理項目</div>', unsafe_allow_html=True)
-    st.page_link("pages/henkan.py", label="仕訳変換")
+    st.page_link("pages/henkan.py", label="&nbsp;&nbsp;仕訳変換")
+
     st.markdown('<div class="section green">設定変更</div>', unsafe_allow_html=True)
-    st.page_link("pages/setting_kamoku.py", label="科目設定")
-    st.page_link("pages/setting_hojo.py", label="補助設定")
-    st.page_link("pages/setting_syouhizei.py", label="消費税設定")
-    st.markdown('<div class="section orange">初期設定</div>', unsafe_allow_html=True)
-    st.page_link("pages/import_kamoku.py", label="勘定科目マスタインポート")
-    st.page_link("pages/import_hojo.py", label="補助科目マスタインポート")
-    st.page_link("pages/import_syouhizei.py", label="消費税マスタインポート")
+    st.page_link("pages/setting_kamoku.py", label="&nbsp;&nbsp;勘定科目設定")
+    st.page_link("pages/setting_hojo.py", label="&nbsp;&nbsp;補助科目設定")
+    st.page_link("pages/setting_syouhizei.py", label="&nbsp;&nbsp;消費税設定")
+
+    st.markdown('<div class="section orange">データベースへのインポート</div>', unsafe_allow_html=True)
+    st.page_link("pages/import_kamoku.py", label="&nbsp;&nbsp;勘定科目マスタインポート")
+    st.page_link("pages/import_hojo.py", label="&nbsp;&nbsp;補助科目マスタインポート")
+    st.page_link("pages/import_syouhizei.py", label="&nbsp;&nbsp;消費税マスタインポート")
+    
 
 st.markdown("""
     <style>
@@ -37,9 +41,26 @@ st.markdown("""
         border-radius: 8px;
         border: 2px solid;
     }
-    .blue { color: #1f77b4; border-color: #1f77b4; background-color: #e6f0fa; }
-    .green { color: #2ca02c; border-color: #2ca02c; background-color: #e9f7ea; }
-    .orange { color: #ff7f0e; border-color: #ff7f0e; background-color: #fff4e6; }
+    .blue {
+        color: #1f77b4;
+        border-color: #1f77b4;
+        background-color: #e6f0fa;
+    }
+    .green {
+        color: #2ca02c;
+        border-color: #2ca02c;
+        background-color: #e9f7ea;
+    }
+    .orange {
+        color: #ff7f0e;
+        border-color: #ff7f0e;
+        background-color: #fff4e6;
+    }
+    .red {
+        color: #d62728;
+        border-color: #d62728;
+        background-color: #fdecea;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -58,7 +79,8 @@ with st.expander("☠️ 注意点"):
     st.write("弥生会計側が外税でも、財務R4には内税でインポートします。")
 
 st.title("仕訳変換")
-
+# 接続中のデータベースのパスを表示
+st.info(f"現在接続中のデータベース: {st.session_state.db_path}")
 uploaded_file = st.file_uploader("弥生会計から出力したCSVファイルをアップロード", type=["csv", "xlsx"])
 
 @st.cache_data

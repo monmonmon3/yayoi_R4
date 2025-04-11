@@ -6,60 +6,43 @@ import io
 import os
 from datetime import datetime
 
-# StreamlitのUI設定
+# ページ設定
 st.set_page_config(layout="wide")
 
+# サイドバー
 with st.sidebar:
-    st.page_link("menu.py", label="データベース接続")
+    st.markdown('<div class="section red">データベース接続</div>', unsafe_allow_html=True)
+    st.page_link("menu.py", label="&nbsp;&nbsp;データベース接続")
+
     st.markdown('<div class="section blue">処理項目</div>', unsafe_allow_html=True)
-    st.page_link("pages/henkan.py", label="仕訳変換")
+    st.page_link("pages/henkan.py", label="&nbsp;&nbsp;仕訳変換")
+
     st.markdown('<div class="section green">設定変更</div>', unsafe_allow_html=True)
-    st.page_link("pages/setting_kamoku.py", label="科目設定")
-    st.page_link("pages/setting_hojo.py", label="補助設定")
-    st.page_link("pages/setting_syouhizei.py", label="消費税設定")
-    st.markdown('<div class="section orange">初期設定</div>', unsafe_allow_html=True)
-    st.page_link("pages/import_kamoku.py", label="勘定科目マスタインポート")
-    st.page_link("pages/import_hojo.py", label="補助科目マスタインポート")
-    st.page_link("pages/import_syouhizei.py", label="消費税マスタインポート")
+    st.page_link("pages/setting_kamoku.py", label="&nbsp;&nbsp;勘定科目設定")
+    st.page_link("pages/setting_hojo.py", label="&nbsp;&nbsp;補助科目設定")
+    st.page_link("pages/setting_syouhizei.py", label="&nbsp;&nbsp;消費税設定")
+
+    st.markdown('<div class="section orange">データベースへのインポート</div>', unsafe_allow_html=True)
+    st.page_link("pages/import_kamoku.py", label="&nbsp;&nbsp;勘定科目マスタインポート")
+    st.page_link("pages/import_hojo.py", label="&nbsp;&nbsp;補助科目マスタインポート")
+    st.page_link("pages/import_syouhizei.py", label="&nbsp;&nbsp;消費税マスタインポート")
 
 st.markdown("""
-<style>
-.section {
-    font-size: 16px;
-    font-weight: bold;
-    padding: 8px 12px;
-    margin: 15px 0 8px 0;
-    border-radius: 8px;
-    border: 2px solid;
-}
-.blue {
-    color: #1f77b4;
-    border-color: #1f77b4;
-    background-color: #e6f0fa;
-}
-.green {
-    color: #2ca02c;
-    border-color: #2ca02c;
-    background-color: #e9f7ea;
-}
-.orange {
-    color: #ff7f0e;
-    border-color: #ff7f0e;
-    background-color: #fff4e6;
-}
-</style>
+    <style>
+    .section {
+        font-size: 16px;
+        font-weight: bold;
+        padding: 8px 12px;
+        margin: 15px 0 8px 0;
+        border-radius: 8px;
+        border: 2px solid;
+    }
+    .blue { color: #1f77b4; border-color: #1f77b4; background-color: #e6f0fa; }
+    .green { color: #2ca02c; border-color: #2ca02c; background-color: #e9f7ea; }
+    .orange { color: #ff7f0e; border-color: #ff7f0e; background-color: #fff4e6; }
+    .red { color: #d62728; border-color: #d62728; background-color: #fdecea; }
+    </style>
 """, unsafe_allow_html=True)
-
-# DB接続
-def get_db_connection():
-    if "conn" not in st.session_state:
-        if "db_path" not in st.session_state or not st.session_state.db_path:
-            st.error("menu.pyでデータベースに接続してください。")
-            st.stop()
-        st.session_state.conn = sqlite3.connect(st.session_state.db_path, check_same_thread=False)
-    return st.session_state.conn
-
-conn = get_db_connection()
 
 # テンプレート作成
 def create_excel_template():
@@ -80,7 +63,7 @@ def create_excel_template():
 # タイトル
 st.title("補助科目マスターのインポート")
 
-# ✅ テンプレートダウンロード（上に配置）
+# テンプレートダウンロード
 excel_file = create_excel_template()
 st.download_button(
     label="📥 補助科目マスターのインポート用テンプレートをダウンロード",
@@ -89,25 +72,33 @@ st.download_button(
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
 
-# ✅ 接続中DBパス表示（テンプレートの下）
-st.info(f"現在接続中のデータベース: {st.session_state.get('db_path')}")
+# DB接続
+def get_db_connection():
+    if "conn" not in st.session_state:
+        if "db_path" not in st.session_state or not st.session_state.db_path:
+            st.error("「データベース接続」でデータベースに接続してください。")
+            st.stop()
+        st.session_state.conn = sqlite3.connect(st.session_state.db_path, check_same_thread=False)
+    return st.session_state.conn
+
+conn = get_db_connection()
 
 # テーブル作成（なければ）
 def create_table():
     cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS hojo_master (
-            管理番号 TEXT PRIMARY KEY,
-            財務R4科目コード TEXT NOT NULL,
-            財務R4科目名 TEXT NOT NULL,
-            財務R4補助科目コード TEXT NOT NULL,
-            財務R4補助科目名 TEXT,
-            弥生会計補助科目名 TEXT
-        )
-    ''')
+    cursor.execute('''CREATE TABLE IF NOT EXISTS hojo_master (
+        管理番号 TEXT PRIMARY KEY,
+        財務R4科目コード TEXT NOT NULL,
+        財務R4科目名 TEXT NOT NULL,
+        財務R4補助科目コード TEXT NOT NULL,
+        財務R4補助科目名 TEXT,
+        弥生会計補助科目名 TEXT)''')
     conn.commit()
 
 create_table()
+
+# 接続中DBパス表示
+st.info(f"現在接続中のデータベース: {st.session_state.get('db_path')}")
 
 # 既存データ表示
 try:
@@ -152,11 +143,9 @@ if uploaded_file:
                 try:
                     cursor = conn.cursor()
                     for row in df.to_dict(orient="records"):
-                        cursor.execute('''
-                            INSERT OR REPLACE INTO hojo_master
+                        cursor.execute('''INSERT OR REPLACE INTO hojo_master
                             (管理番号, 財務R4科目コード, 財務R4科目名, 財務R4補助科目コード, 財務R4補助科目名, 弥生会計補助科目名)
-                            VALUES (?, ?, ?, ?, ?, ?)
-                        ''', (
+                            VALUES (?, ?, ?, ?, ?, ?)''', (
                             row["管理番号"], row["財務R4科目コード"], row["財務R4科目名"],
                             row["財務R4補助科目コード"], row["財務R4補助科目名"], row["弥生会計補助科目名"]
                         ))
@@ -182,7 +171,7 @@ if st.session_state.get("refresh_hojo"):
         st.exception(e)
     del st.session_state["refresh_hojo"]
 
-# ✅ DBファイルのダウンロードボタン（DB名 + 日付）
+# DBファイルのダウンロード
 if "db_path" in st.session_state and os.path.isfile(st.session_state.db_path):
     db_path = st.session_state.db_path
     db_filename = os.path.basename(db_path)

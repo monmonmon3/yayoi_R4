@@ -21,7 +21,7 @@ with st.sidebar:
     st.page_link("pages/setting_syouhizei.py", label="消費税設定")
 
     # 初期設定（オレンジ系）
-    st.markdown('<div class="section orange">初期設定</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section orange">データベースへのインポート</div>', unsafe_allow_html=True)
     st.page_link("pages/import_kamoku.py", label="勘定科目マスタインポート")
     st.page_link("pages/import_hojo.py", label="補助科目マスタインポート")
     st.page_link("pages/import_syouhizei.py", label="消費税マスタインポート")

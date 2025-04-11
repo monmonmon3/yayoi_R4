@@ -8,21 +8,23 @@ from datetime import datetime
 # ページ設定
 st.set_page_config(layout="wide")
 
-# サイドバー
 with st.sidebar:
-    st.page_link("menu.py", label="データベース接続")
-    st.markdown('<div class="section blue">処理項目</div>', unsafe_allow_html=True)
-    st.page_link("pages/henkan.py", label="仕訳変換")
-    st.markdown('<div class="section green">設定変更</div>', unsafe_allow_html=True)
-    st.page_link("pages/setting_kamoku.py", label="科目設定")
-    st.page_link("pages/setting_hojo.py", label="補助設定")
-    st.page_link("pages/setting_syouhizei.py", label="消費税設定")
-    st.markdown('<div class="section orange">初期設定</div>', unsafe_allow_html=True)
-    st.page_link("pages/import_kamoku.py", label="勘定科目マスタインポート")
-    st.page_link("pages/import_hojo.py", label="補助科目マスタインポート")
-    st.page_link("pages/import_syouhizei.py", label="消費税マスタインポート")
+    st.markdown('<div class="section red">データベース接続</div>', unsafe_allow_html=True)
+    st.page_link("menu.py", label="&nbsp;&nbsp;データベース接続")
 
-# CSS
+    st.markdown('<div class="section blue">処理項目</div>', unsafe_allow_html=True)
+    st.page_link("pages/henkan.py", label="&nbsp;&nbsp;仕訳変換")
+
+    st.markdown('<div class="section green">設定変更</div>', unsafe_allow_html=True)
+    st.page_link("pages/setting_kamoku.py", label="&nbsp;&nbsp;勘定科目設定")
+    st.page_link("pages/setting_hojo.py", label="&nbsp;&nbsp;補助科目設定")
+    st.page_link("pages/setting_syouhizei.py", label="&nbsp;&nbsp;消費税設定")
+
+    st.markdown('<div class="section orange">データベースへのインポート</div>', unsafe_allow_html=True)
+    st.page_link("pages/import_kamoku.py", label="&nbsp;&nbsp;勘定科目マスタインポート")
+    st.page_link("pages/import_hojo.py", label="&nbsp;&nbsp;補助科目マスタインポート")
+    st.page_link("pages/import_syouhizei.py", label="&nbsp;&nbsp;消費税マスタインポート")
+
 st.markdown("""
     <style>
     .section {
@@ -48,6 +50,11 @@ st.markdown("""
         border-color: #ff7f0e;
         background-color: #fff4e6;
     }
+    .red {
+        color: #d62728;
+        border-color: #d62728;
+        background-color: #fdecea;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -64,7 +71,7 @@ with st.expander("財務R4の消費税情報"):
 def get_db_connection():
     if "conn" not in st.session_state:
         if "db_path" not in st.session_state or not st.session_state.db_path:
-            st.error("menu.pyでDBに接続してください")
+            st.error("「データベース接続」でDBに接続してください")
             st.stop()
         st.session_state.conn = sqlite3.connect(st.session_state.db_path, check_same_thread=False)
     return st.session_state.conn
