@@ -29,7 +29,6 @@ with st.sidebar:
     st.page_link("pages/import_kamoku.py", label="&nbsp;&nbsp;勘定科目マスタインポート")
     st.page_link("pages/import_hojo.py", label="&nbsp;&nbsp;補助科目マスタインポート")
     st.page_link("pages/import_syouhizei.py", label="&nbsp;&nbsp;消費税マスタインポート")
-    
 
 st.markdown("""
     <style>
@@ -80,7 +79,11 @@ with st.expander("☠️ 注意点"):
 
 st.title("仕訳変換")
 # 接続中のデータベースのパスを表示
-st.info(f"現在接続中のデータベース: {st.session_state.db_path}")
+if "db_path" in st.session_state:
+    st.info(f"現在接続中のデータベース: {st.session_state.db_path}")
+else:
+    st.error("データベースに接続していません。menu.pyで接続してください。")
+
 uploaded_file = st.file_uploader("弥生会計から出力したCSVファイルをアップロード", type=["csv", "xlsx"])
 
 @st.cache_data
